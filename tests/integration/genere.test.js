@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { Genere } = require("../../models/genere");
-const { response } = require("express");
+const { User } = require("../../models/user");
+
 let server;
 
 describe("/api/genere", () => {
@@ -50,6 +51,23 @@ describe("/api/genere", () => {
         .post("/api/generes")
         .send({ name: " genere1" });
       expect(response.status).toBe(401);
+    });
+    it("should return 400 if the genere is less than 5 characters", async () => {
+      const token = new User().generateAuthToken();
+      const response = await request(server)
+        .post("/api/generes")
+        .set("x-auth-token", token)
+        .send({ name: "1234" });
+      expect(response.status).toBe(400);
+    });
+    it("should return 400 if the genere is more than 50 characters", async () => {
+      const name = new Array(52).join("a");
+      const token = new User().generateAuthToken();
+      const response = await request(server)
+        .post("/api/generes")
+        .set("x-auth-token", token)
+        .send({ name: name });
+      expect(response.status).toBe(400);
     });
   });
 });
