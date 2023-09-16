@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { Genere } = require("../../models/genere");
 const { User } = require("../../models/user");
+const { exceptions } = require("winston");
 
 let server;
 
@@ -46,45 +47,53 @@ describe("/api/genere", () => {
     });
   });
   describe("Post /", () => {
-    it("should return 401 if the client is not logged in", async () => {
-      const response = await request(server)
+    let token;
+    let name;
+    const exec = async () => {
+      return await request(server)
         .post("/api/generes")
-        .send({ name: " genere1" });
+        .set("x-auth-token", token)
+        .send({ name });
+    };
+
+    beforeEach(() => {
+      token = new User().generateAuthToken();
+      name = "genere1";
+    });
+
+    it("should return 401 if the client is not logged in", async () => {
+      token = "";
+
+      const response = await exec();
+
       expect(response.status).toBe(401);
     });
     it("should return 400 if the genere is less than 5 characters", async () => {
-      const token = new User().generateAuthToken();
-      const response = await request(server)
-        .post("/api/generes")
-        .set("x-auth-token", token)
-        .send({ name: "1234" });
+      name = "1234";
+
+      const response = await exec();
+
       expect(response.status).toBe(400);
     });
     it("should return 400 if the genere is more than 50 characters", async () => {
-      const name = new Array(52).join("a");
-      const token = new User().generateAuthToken();
-      const response = await request(server)
-        .post("/api/generes")
-        .set("x-auth-token", token)
-        .send({ name: name });
+      name = new Array(52).join("a");
+
+      const response = await exec();
+
       expect(response.status).toBe(400);
     });
-    it("should  save the genere if it is valid", async () => {
-      const token = new User().generateAuthToken();
-      const response = await request(server)
-        .post("/api/generes")
-        .set("x-auth-token", token)
-        .send({ name: "genere1" });
+    it("should save the genere if it is valid", async () => {
+      await exec();
+
       const genere = await Genere.find({ name: "genere1" });
+
       expect(genere).not.toBe(null);
     });
     it("should return the genere if it is valid", async () => {
-      const token = new User().generateAuthToken();
-      const response = await request(server)
-        .post("/api/generes")
-        .set("x-auth-token", token)
-        .send({ name: "genere1" });
+      const response = await exec();
+
       expect(response.body._id).not.toBe(null);
+
       expect(response.body.name).toBe("genere1");
     });
   });
