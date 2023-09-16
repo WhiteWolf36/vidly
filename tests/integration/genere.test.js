@@ -69,5 +69,23 @@ describe("/api/genere", () => {
         .send({ name: name });
       expect(response.status).toBe(400);
     });
+    it("should  save the genere if it is valid", async () => {
+      const token = new User().generateAuthToken();
+      const response = await request(server)
+        .post("/api/generes")
+        .set("x-auth-token", token)
+        .send({ name: "genere1" });
+      const genere = await Genere.find({ name: "genere1" });
+      expect(genere).not.toBe(null);
+    });
+    it("should return the genere if it is valid", async () => {
+      const token = new User().generateAuthToken();
+      const response = await request(server)
+        .post("/api/generes")
+        .set("x-auth-token", token)
+        .send({ name: "genere1" });
+      expect(response.body._id).not.toBe(null);
+      expect(response.body.name).toBe("genere1");
+    });
   });
 });
