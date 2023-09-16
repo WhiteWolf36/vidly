@@ -61,7 +61,7 @@ router.put("/:id", auth, async (req, res) => {
 router.delete("/:id", [auth, admin], async (req, res) => {
   const genere = await Genere.findByIdAndRemove(req.params.id);
   if (!genere)
-    return res.status(400).send("Cannot find the genere with the current id");
+    return res.status(400).send("Cannot find the genere with the current id!");
   res.send(genere);
 });
 
