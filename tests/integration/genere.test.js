@@ -10,7 +10,7 @@ describe("/api/genere", () => {
     server = require("../../index");
   });
   afterEach(async () => {
-    server.close();
+    await server.close();
     await Genere.deleteMany({});
   });
   describe("Get/", () => {
