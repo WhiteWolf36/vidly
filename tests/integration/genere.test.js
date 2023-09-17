@@ -31,7 +31,7 @@ describe("/api/genere", () => {
       server = require("../../index");
     });
     afterEach(async () => {
-      server.close();
+      await server.close();
       await Genere.deleteMany({});
     });
     it("should return the genere with the given id ", async () => {
@@ -59,6 +59,9 @@ describe("/api/genere", () => {
     beforeEach(() => {
       token = new User().generateAuthToken();
       name = "genere1";
+    });
+    afterEach(async () => {
+      await server.close();
     });
 
     it("should return 401 if the client is not logged in", async () => {
