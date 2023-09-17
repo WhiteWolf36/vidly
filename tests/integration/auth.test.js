@@ -44,6 +44,5 @@ describe("auth middleware", () => {
   });
   afterEach(async () => {
     await server.close();
-    await Genere.deleteMany({});
   });
 });
