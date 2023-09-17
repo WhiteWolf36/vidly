@@ -2,6 +2,7 @@ const request = require("supertest");
 const { Genere } = require("../../models/genere");
 const { User } = require("../../models/user");
 const { exceptions } = require("winston");
+const { default: mongoose } = require("mongoose");
 
 let server;
 
@@ -39,9 +40,14 @@ describe("/api/genere", () => {
       await genere.save();
       const response = await request(server).get("/api/generes/" + genere._id);
       expect(response.statusCode).toBe(200);
-      expect(response.body[0]).toHaveProperty("name", genere.name);
+      expect(response.body).toHaveProperty("name", genere.name);
     });
-    it("should throw an error if the Genere does not exists ", async () => {
+    it("should throw 404 if the Genere does not exists ", async () => {
+      const id = new mongoose.Types.ObjectId();
+      const response = await request(server).get("/api/generes/" + id);
+      expect(response.statusCode).toBe(404);
+    });
+    it("should throw 404 if we pass invalid id ", async () => {
       const response = await request(server).get("/api/generes/1");
       expect(response.statusCode).toBe(404);
     });

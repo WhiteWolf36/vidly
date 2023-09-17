@@ -18,7 +18,7 @@ router.get(
 
 //Getting a specific Genere
 router.get("/:id", validateObjectId, async (req, res) => {
-  const genere = await Genere.find({ _id: req.params.id });
+  const genere = await Genere.findOne({ _id: req.params.id });
   if (!genere) return res.status(404).send("Genere Not Found!");
   res.send(genere);
 });
