@@ -23,9 +23,6 @@ describe("auth middleware", () => {
     token = new User().generateAuthToken();
   });
 
-  afterEach(async () => {
-    await server.close();
-  });
   it("should return 401 if no token is provided ", async () => {
     token = "";
     const response = await exec();
@@ -41,8 +38,5 @@ describe("auth middleware", () => {
   it("should return 200 if valid token is provided ", async () => {
     const response = await exec();
     expect(response.status).toBe(200);
-  });
-  afterEach(async () => {
-    await server.close();
   });
 });

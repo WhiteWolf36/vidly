@@ -60,9 +60,6 @@ describe("/api/genere", () => {
       token = new User().generateAuthToken();
       name = "genere1";
     });
-    afterEach(async () => {
-      await server.close();
-    });
 
     it("should return 401 if the client is not logged in", async () => {
       token = "";
@@ -99,8 +96,5 @@ describe("/api/genere", () => {
 
       expect(response.body.name).toBe("genere1");
     });
-  });
-  afterEach(async () => {
-    await server.close();
   });
 });
