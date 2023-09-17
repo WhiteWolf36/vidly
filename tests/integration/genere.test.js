@@ -100,4 +100,7 @@ describe("/api/genere", () => {
       expect(response.body.name).toBe("genere1");
     });
   });
+  afterEach(async () => {
+    await server.close();
+  });
 });

@@ -42,4 +42,8 @@ describe("auth middleware", () => {
     const response = await exec();
     expect(response.status).toBe(200);
   });
+  afterEach(async () => {
+    await server.close();
+    await Genere.deleteMany({});
+  });
 });
