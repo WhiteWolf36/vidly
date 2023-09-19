@@ -66,4 +66,10 @@ describe("/api/returns", () => {
     const response = await exec();
     expect(response.status).toBe(404);
   });
+  it("should return 400 if the rental is already proccessed", async () => {
+    rental.dateReturned = Date.now();
+    await rental.save();
+    const response = await exec();
+    expect(response.status).toBe(400);
+  });
 });

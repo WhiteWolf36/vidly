@@ -13,7 +13,10 @@ router.post("/", async (req, res) => {
     "customer._id": req.body.customerId,
     "movie._id": req.body.movieId,
   });
-  if (!rental) res.status(404).send("No rental found!");
+  if (!rental) return res.status(404).send("No rental found!");
+  if (rental.dateReturned) {
+    return res.status(400).send("Rental is already proccessed");
+  }
   res.status(401).send("Unauthorized");
 });
 
