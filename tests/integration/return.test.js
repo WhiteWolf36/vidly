@@ -4,6 +4,7 @@ const { User } = require("../../models/user");
 const request = require("supertest");
 
 const moment = require("moment");
+const { Movie } = require("../../models/movie");
 
 describe("/api/returns", () => {
   let server;
@@ -11,7 +12,7 @@ describe("/api/returns", () => {
   let movieId;
   let rental;
   let token;
-
+  let movie;
   const exec = () => {
     return request(server)
       .post("/api/returns")
@@ -25,6 +26,15 @@ describe("/api/returns", () => {
     movieId = new mongoose.Types.ObjectId();
     token = new User().generateAuthToken();
 
+    movie = new Movie({
+      _id: movieId,
+      title: "12345",
+      dailyRentalRate: 2,
+      genere: {
+        name: "12345",
+      },
+      numberInStock: 10,
+    });
     rental = new Rental({
       customer: {
         _id: customerId,
@@ -38,6 +48,7 @@ describe("/api/returns", () => {
       },
     });
     await rental.save();
+    await movie.save();
   });
   afterEach(async () => {
     await server.close();
@@ -88,5 +99,10 @@ describe("/api/returns", () => {
     const response = await exec();
     const rentalInDb = await Rental.findById(rental._id);
     expect(rentalInDb.rentalFee).toBe(14);
+  });
+  it("should increase the stock of the movie ", async () => {
+    const response = await exec();
+    const movieInDb = await Movie.findById(movieId);
+    expect(movieInDb.numberInStock).toBe(movie.numberInStock + 1);
   });
 });
