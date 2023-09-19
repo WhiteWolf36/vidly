@@ -61,4 +61,9 @@ describe("/api/returns", () => {
     const response = await exec();
     expect(response.status).toBe(400);
   });
+  it("should return 404 if no rental for customer/movie", async () => {
+    await Rental.deleteMany({});
+    const response = await exec();
+    expect(response.status).toBe(404);
+  });
 });
