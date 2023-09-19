@@ -103,24 +103,52 @@ describe("/api/genere", () => {
       expect(response.body.name).toBe("genere1");
     });
   });
-  // describe("Put /", () => {
-  //   let token, updateName;
-  //   let objectId;
-  //   beforeEach(() => {
-  //     server = require("../../index");
-  //     token = new User().generateAuthToken();
-  //     updateName = "genere2";
-  //     objectId = new mongoose.Types.ObjectId();
-  //   });
-  //   afterEach(async () => {
-  //     await server.close();
-  //     await Genere.deleteMany({});
-  //   });
-  //   const exec = () => {
-  //     let genere = new Genere({ name: "genere1" });
-  //   };
-  //   it("should update the given genere", () => {});
-  // });
+
+  describe("Put / ", () => {
+    let token;
+    let objectId;
+    let existingGenere;
+    beforeEach(async () => {
+      const user = new User({ isAdmin: true });
+      token = user.generateAuthToken();
+      existingGenere = new Genere({
+        _id: new mongoose.Types.ObjectId(),
+        name: "genere1",
+      });
+      await existingGenere.save();
+    });
+    afterEach(async () => {
+      // Clean up the database
+      await Genere.deleteMany({});
+    });
+    const exec = async (id, name) => {
+      return request(server)
+        .put(`/api/generes/${id}`)
+        .set("x-auth-token", token)
+        .send({ name });
+    };
+    it("should return 400 if genere is less than 5 characters ", async () => {
+      console.log(existingGenere);
+      const response = await exec(existingGenere._id, { name: "123" });
+      expect(response.status).toBe(400);
+    });
+    it("should return 400 if genere is more than 50 characters ", async () => {
+      const response = await exec(existingGenere._id, {
+        name: new Array(52).join("a"),
+      });
+      expect(response.status).toBe(400);
+    });
+    it("should return 401 if the client is not logged in", async () => {
+      token = "";
+
+      const response = await exec(existingGenere._id, "genere1");
+
+      expect(response.status).toBe(401);
+    });
+    // it('should return 404 if invalid id is passed ', async() => {
+
+    // });
+  });
   describe("Delete /", () => {
     let token;
     let objectId = "";

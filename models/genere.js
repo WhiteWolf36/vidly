@@ -6,7 +6,7 @@ const genereSchema = mongoose.Schema({
     type: String,
     required: true,
     minLength: 5,
-    maxLength: 255,
+    maxLength: 50,
   },
 });
 const Genere = mongoose.model("genere", genereSchema);
