@@ -153,6 +153,14 @@ describe("/api/genere", () => {
       const response = await exec(existingGenere._id, "genere2");
       expect(response.status).toBe(200);
     });
+    it("should return the updated genere name in response ", async () => {
+      const response = await exec(existingGenere._id, "genere2");
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({
+        _id: existingGenere._id.toHexString(),
+        name: "genere2",
+      });
+    });
   });
   describe("Delete /", () => {
     let token;
