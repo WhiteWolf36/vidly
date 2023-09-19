@@ -10,7 +10,9 @@ require("./startup/mongodb")();
 require("./startup/routes")(app);
 require("./startup/prod")(app);
 
-const server = app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+
+const server = app.listen(port, () => {
   console.log("Listening on Port 3000");
 });
 
