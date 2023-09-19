@@ -2,7 +2,8 @@ const { default: mongoose } = require("mongoose");
 const { Rental } = require("../../models/rental");
 const { User } = require("../../models/user");
 const request = require("supertest");
-const { response } = require("express");
+
+const moment = require("moment");
 
 describe("/api/returns", () => {
   let server;
@@ -80,5 +81,12 @@ describe("/api/returns", () => {
     const diff = new Date() - rentalInDb.dateReturned;
 
     expect(diff).toBeLessThan(10 * 1000);
+  });
+  it("should return the rental fee if we get a valid request", async () => {
+    rental.dateOut = moment().add(-7, "days");
+    await rental.save();
+    const response = await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    expect(rentalInDb.rentalFee).toBe(14);
   });
 });
