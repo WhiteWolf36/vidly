@@ -74,4 +74,11 @@ describe("/api/returns", () => {
     const response = await exec();
     expect(response.status).toBe(200);
   });
+  it("should set the return date if we get a valid request", async () => {
+    const response = await exec();
+    const rentalInDb = await Rental.findById(rental._id);
+    const diff = new Date() - rentalInDb.dateReturned;
+
+    expect(diff).toBeLessThan(10 * 1000);
+  });
 });

@@ -18,8 +18,9 @@ router.post("/", auth, async (req, res) => {
   if (rental.dateReturned) {
     return res.status(400).send("Rental is already proccessed");
   }
-
-  return res.status(200).send("Rental exists!");
+  rental.dateReturned = new Date();
+  await rental.save();
+  return res.status(200).send();
 });
 
 module.exports = router;
