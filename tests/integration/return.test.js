@@ -10,6 +10,14 @@ describe("/api/returns", () => {
   let movieId;
   let rental;
   let token;
+
+  const exec = () => {
+    return request(server)
+      .post("/api/returns")
+      .set("x-auth-token", token)
+      .send({ customerId, movieId });
+  };
+
   beforeEach(async () => {
     server = require("../../index");
     customerId = new mongoose.Types.ObjectId();
@@ -43,19 +51,14 @@ describe("/api/returns", () => {
     expect(response.status).toBe(401);
   });
   it("should return 400 if no customer id is provided", async () => {
-    customerId = " ";
-    const response = await request(server)
-      .post("/api/returns")
-      .set("x-auth-token", token)
-      .send({ movieId });
+    customerId = "";
+    const response = await exec();
     expect(response.status).toBe(400);
   });
   it("should return 400 if no movie id is provided", async () => {
-    customerId = " ";
-    const response = await request(server)
-      .post("/api/returns")
-      .set("x-auth-token", token)
-      .send({ customerId });
+    movieId = "";
+
+    const response = await exec();
     expect(response.status).toBe(400);
   });
 });
