@@ -103,4 +103,54 @@ describe("/api/genere", () => {
       expect(response.body.name).toBe("genere1");
     });
   });
+  // describe("Put /", () => {
+  //   let token, updateName;
+  //   let objectId;
+  //   beforeEach(() => {
+  //     server = require("../../index");
+  //     token = new User().generateAuthToken();
+  //     updateName = "genere2";
+  //     objectId = new mongoose.Types.ObjectId();
+  //   });
+  //   afterEach(async () => {
+  //     await server.close();
+  //     await Genere.deleteMany({});
+  //   });
+  //   const exec = () => {
+  //     let genere = new Genere({ name: "genere1" });
+  //   };
+  //   it("should update the given genere", () => {});
+  // });
+  describe("Delete /", () => {
+    let token;
+    let objectId = "";
+    beforeEach(() => {
+      token = new User({ isAdmin: true }).generateAuthToken();
+    });
+    const exec = () => {
+      return request(server)
+        .delete(`/api/generes/${objectId}`)
+        .set("x-auth-token", token);
+    };
+    it("should return 404 error if we supply an invalid object id parameter", async () => {
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
+    it("should return 404 error if we supply a valid objectId that does not belong to any existing genre", async () => {
+      objectId = new mongoose.Types.ObjectId();
+      const res = await exec();
+      expect(res.status).toBe(404);
+    });
+    it("should return the deleted genre if the delete was successful", async () => {
+      objectId = new mongoose.Types.ObjectId();
+      const schema = {
+        _id: objectId.toHexString(),
+        name: "genre1",
+      };
+      const genere = await new Genere(schema).save();
+      const res = await exec();
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject(schema);
+    });
+  });
 });
