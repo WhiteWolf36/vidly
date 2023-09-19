@@ -8,6 +8,7 @@ require("./startup/validation")();
 const app = express();
 require("./startup/mongodb")();
 require("./startup/routes")(app);
+require("./startup/prod")(app);
 
 const server = app.listen(3000, () => {
   console.log("Listening on Port 3000");
