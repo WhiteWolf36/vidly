@@ -128,7 +128,6 @@ describe("/api/genere", () => {
         .send({ name });
     };
     it("should return 400 if genere is less than 5 characters ", async () => {
-      console.log(existingGenere);
       const response = await exec(existingGenere._id, { name: "123" });
       expect(response.status).toBe(400);
     });
