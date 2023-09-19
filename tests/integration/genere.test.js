@@ -145,9 +145,10 @@ describe("/api/genere", () => {
 
       expect(response.status).toBe(401);
     });
-    // it('should return 404 if invalid id is passed ', async() => {
-
-    // });
+    it("should return 404 if invalid id is passed ", async () => {
+      const response = await exec(new mongoose.Types.ObjectId(), "genere1");
+      expect(response.status).toBe(404);
+    });
   });
   describe("Delete /", () => {
     let token;
