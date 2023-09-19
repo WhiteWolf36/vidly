@@ -149,6 +149,10 @@ describe("/api/genere", () => {
       const response = await exec(new mongoose.Types.ObjectId(), "genere1");
       expect(response.status).toBe(404);
     });
+    it("should return 200 if valid genere is updated ", async () => {
+      const response = await exec(existingGenere._id, "genere2");
+      expect(response.status).toBe(200);
+    });
   });
   describe("Delete /", () => {
     let token;
