@@ -45,9 +45,7 @@ describe("/api/returns", () => {
 
   it("should return 401 if the user is not logged in", async () => {
     token = "";
-    const response = await request(server)
-      .post("/api/returns")
-      .send({ customerId, movieId });
+    const response = await exec();
     expect(response.status).toBe(401);
   });
   it("should return 400 if no customer id is provided", async () => {
@@ -71,5 +69,9 @@ describe("/api/returns", () => {
     await rental.save();
     const response = await exec();
     expect(response.status).toBe(400);
+  });
+  it("should return 200 if we get a valid request", async () => {
+    const response = await exec();
+    expect(response.status).toBe(200);
   });
 });
