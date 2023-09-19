@@ -2,6 +2,7 @@ const { default: mongoose } = require("mongoose");
 const { Rental } = require("../../models/rental");
 const { User } = require("../../models/user");
 const request = require("supertest");
+const { response } = require("express");
 
 describe("/api/returns", () => {
   let server;
@@ -40,5 +41,13 @@ describe("/api/returns", () => {
       .post("/api/returns")
       .send({ customerId, movieId });
     expect(response.status).toBe(401);
+  });
+  it("should return 400 if no customer id is passed", async () => {
+    customerId = " ";
+    const response = await request(server)
+      .post("/api/returns")
+      .set("x-auth-token", token)
+      .send({ movieId });
+    expect(response.status).toBe(400);
   });
 });
