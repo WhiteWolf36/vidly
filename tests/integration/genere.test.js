@@ -1,7 +1,7 @@
 const request = require("supertest");
 const { Genere } = require("../../models/genere");
 const { User } = require("../../models/user");
-const { exceptions } = require("winston");
+
 const { default: mongoose } = require("mongoose");
 
 let server;
