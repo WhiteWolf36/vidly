@@ -31,10 +31,7 @@ describe("/api/genere", () => {
     beforeEach(async () => {
       server = require("../../index");
     });
-    afterEach(async () => {
-      await server.close();
-      await Genere.deleteMany({});
-    });
+
     it("should return the genere with the given id ", async () => {
       const genere = new Genere({ name: "genere1" });
       await genere.save();
