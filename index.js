@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 require("express-async-errors");
-require("./startup/logging")();
+//require("./startup/logging")();
 require("./startup/config")();
 require("./startup/validation")();
 
