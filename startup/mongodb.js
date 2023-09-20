@@ -3,5 +3,7 @@ const config = require("config");
 module.exports = function () {
   mongoose
     .connect(process.env.MONGODB_URI)
-    .then(() => console.log(`Connected to the database ${config.get("db")}`));
+    .then(() =>
+      console.log(`Connected to the database ${process.env.MONGODB_URI}`)
+    );
 };
